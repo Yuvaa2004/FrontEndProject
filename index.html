@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="movieTicketApp">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Movie Theater Ticket Booking</title>
+    <style>
+        <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #222;
+            color: #eee;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 500px;
+            background-color: #333;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 15px #00d8ff;
+        }
+
+        h1 {
+            text-align: center;
+            color: #00d8ff;
+        }
+
+        label {
+            display: block;
+            margin: 15px 0 5px;
+            font-weight: bold;
+        }
+
+        select,
+        input[type="number"] {
+            width: 100%;
+            padding: 8px;
+            border-radius: 4px;
+            border: none;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        button {
+            margin-top: 20px;
+            width: 100%;
+            padding: 12px;
+            font-size: 18px;
+            font-weight: bold;
+            border: none;
+            border-radius: 5px;
+            background: #00d8ff;
+            color: #222;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        button:hover:not([disabled]) {
+            background: #0088bb;
+        }
+
+        button:disabled {
+            background: #555;
+            cursor: not-allowed;
+        }
+
+        .summary {
+            margin-top: 20px;
+            font-size: 18px;
+            text-align: center;
+            color: #0f0;
+            min-height: 1.5em;
+        }
+
+        .image-container {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+        }
+
+        .image-container img {
+            max-width: 100px;
+            border-radius: 5px;
+        }
+    </style>
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+</head>
+
+<body ng-controller="BookingController as ctrl">
+    <div class="container">
+        <h1>Movie Ticket Booking</h1>
+
+        <div class="image-container">
+            <img src="https://via.placeholder.com/100?text=Image1" alt="KGF" />
+            <img src="https://via.placeholder.com/100?text=Image2" alt="Kanthara" />
+            <img src="https://via.placeholder.com/100?text=Image3" alt="Googly" />
+        </div>
+
+        <label for="movieSelect">Select Movie:</label>
+        <select id="movieSelect" ng-model="ctrl.selectedMovie" ng-options="movie as movie.title for movie in ctrl.movies" ng-change="ctrl.updateShowtimes()">
+            <option value="" disabled selected>Select a movie</option>
+        </select>
+
+        <label for="showtimeSelect" ng-if="ctrl.showtimes.length > 0">Select Showtime:</label>
+        <select id="showtimeSelect" ng-model="ctrl.selectedShowtime" ng-options="time for time in ctrl.showtimes" ng-if="ctrl.showtimes.length > 0" ng-change="ctrl.updatePrice()">
+            <option value="" disabled selected>Select a showtime</option>
+        </select>
+
+        <label for="ticketsInput" ng-if="ctrl.selectedShowtime">Number of Tickets:</label>
+        <input type="number" id="ticketsInput" ng-model="ctrl.ticketCount" min="1" max="10" ng-if="ctrl.selectedShowtime" ng-change="ctrl.updatePrice()" />
+
+        <div class="summary" ng-if="ctrl.ticketCount && ctrl.selectedShowtime">
+            Total Price: ${{ctrl.totalPrice}}
+        </div>
+
+        <button ng-click="ctrl.bookTickets()" ng-disabled="!ctrl.ticketCount || !ctrl.selectedShowtime">Book Tickets</button>
+    </div>
+
+    <script>
+        angular.module('movieTicketApp', [])
+            .controller('BookingController', function () {
+                const vm = this;
+
+                vm.movies = [
+                    { title: 'KGF', showtimes: ['10:00 AM', '1:00 PM', '6:00 PM'], price: 10 },
+                    { title: 'Kanthara', showtimes: ['11:00 AM', '2:00 PM', '7:00 PM'], price: 12 },
+                    { title: 'Googly', showtimes: ['9:00 AM', '12:00 PM', '5:00 PM'], price: 8 }
+                ];
+
+                vm.selectedMovie = null;
+                vm.selectedShowtime = null;
+                vm.ticketCount = null;
+                vm.totalPrice = 0;
+                vm.showtimes = [];
+
+                vm.updateShowtimes = function () {
+                    vm.showtimes = vm.selectedMovie ? vm.selectedMovie.showtimes : [];
+                    vm.selectedShowtime = null;
+                    vm.ticketCount = null;
+                    vm.totalPrice = 0;
+                };
+
+                vm.updatePrice = function () {
+                    if (vm.selectedMovie && vm.ticketCount) {
+                        vm.totalPrice = vm.ticketCount * vm.selectedMovie.price;
+                    } else {
+                        vm.totalPrice = 0;
+                    }
+                };
+
+                vm.bookTickets = function () {
+                    alert(`Successfully booked ${vm.ticketCount} ticket(s) for "${vm.selectedMovie.title}" at ${vm.selectedShowtime}.\nTotal Price: $${vm.totalPrice}`);
+                    // Reset after booking
+                    vm.selectedMovie = null;
+                    vm.selectedShowtime = null;
+                    vm.ticketCount = null;
+                    vm.totalPrice = 0;
+                    vm.showtimes = [];
+                };
+            });
+    </script>
+</body>
+
+</html>
