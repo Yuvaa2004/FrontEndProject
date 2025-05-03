@@ -13,8 +13,8 @@ A simple and interactive movie ticket booking application built using **HTML**, 
 
 
 ## 🖼️ Screenshot Preview
-![Screenshot 2025-05-02 194612](https://github.com/user-attachments/assets/780a2ca4-58e9-4367-b2d2-e38d64b32f28)
 
+![Screenshot 2025-05-02 194612](https://github.com/user-attachments/assets/ed902c53-4573-41de-aaee-e8424934c73f)
 
 ## 🛠️ Technologies Used
 
